@@ -18,8 +18,11 @@ export default class Block{
                     .update(this.index + this.timestamp + JSON.stringify(this.transactions) + this.previousHash + this.nonce)
                     .digest("hex");
     }
-    public mineBlock(difficulty:number){
-        
+    public mineBlock(difficulty:number):void{
+        while(!this.nonce.toString().startsWith("0".repeat(difficulty))){
+            this.nonce++;
+            this.hash = this.calculateHash();
+        }
     }
 }
 

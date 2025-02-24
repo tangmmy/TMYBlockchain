@@ -11,7 +11,9 @@ export default class BlockChain{
     }
 
     public createGenesisBlock():Block{
-        return(new Block(0,Date.now(),"0",[],0));
+        const genesisBlock = new Block(0,Date.now(),"0",[],0);
+        genesisBlock.mineBlock(this.difficulty);
+        return(genesisBlock);
     }
     public getLatestBlock():Block{
         return this.chain[this.chain.length-1];
@@ -21,7 +23,7 @@ export default class BlockChain{
             if(!newBlock.transactions[i].isValid()) return;
         }
         newBlock.previousHash = this.getLatestBlock().hash;
-        newBlock.hash = newBlock.calculateHash();
+        newBlock.mineBlock(this.difficulty);
         this.chain.push(newBlock);
     }
     public isValidChain():boolean{

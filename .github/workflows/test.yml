@@ -1,0 +1,28 @@
+name: Run Jest Tests
+
+on:   # When should this workflow run?
+  push:
+    branches:
+      - main   # Runs on push to main branch
+  pull_request:
+    branches:
+      - main   # Runs on pull request to main branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest   # Use latest Ubuntu for the workflow
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4  # Gets the code from your repository
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4  # Installs Node.js
+        with:
+          node-version: 20  # Use Node.js version 20 (change if needed)
+
+      - name: Install Dependencies
+        run: npm install  # Installs project dependencies
+
+      - name: Run Jest Tests
+        run: npm test  # Runs Jest tests
