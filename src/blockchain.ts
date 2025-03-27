@@ -1,6 +1,8 @@
+import { timeStamp } from "console";
 import Block from "./block";
 import Transaction from "./transaction";
 import TransactionPool from "./transactionpool";
+import MerkleTree from "./merkleTree";
 export default class BlockChain{
     public chain : Block[];
     public difficulty : number = 2;
@@ -11,7 +13,7 @@ export default class BlockChain{
     }
 
     public createGenesisBlock():Block{
-        const genesisBlock = new Block(0,Date.now(),"0",[],0);
+        const genesisBlock = new Block(0, Date.now(), "", new MerkleTree<Transaction>([]), this.difficulty, "");
         genesisBlock.mineBlock(this.difficulty);
         return(genesisBlock);
     }
@@ -19,8 +21,10 @@ export default class BlockChain{
         return this.chain[this.chain.length-1];
     }
     public addNewBlock(newBlock : Block){
-        for(let i=0; i<newBlock.transactions.length;i++){
-            if(!newBlock.transactions[i].isValid()) return;
+        const transactions = newBlock.transactions.getLeaves();
+        
+        for (const transaction of transactions) {
+            if (!transaction.isValid()) return;
         }
         newBlock.previousHash = this.getLatestBlock().hash;
         newBlock.mineBlock(this.difficulty);
